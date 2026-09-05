@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════════════
+   KhinsaOS design system — warm paper
+   A beautiful old computer, not an arcade. Cream ground, hard
+   1px ink hairlines, pinstriped title bars, hard offset shadows.
+   Two accents only: warm red and ink blue.
+   ═══════════════════════════════════════════════════════════ */
+@theme {
+  --color-paper:    #f4efe4;  /* desktop ground */
+  --color-card:     #fdfbf6;  /* window / panel fill */
+  --color-shade:    #e7dfd0;  /* recessed areas, inactive chrome */
+  --color-ink:      #1a1714;  /* text, borders — near-black, warm */
+  --color-ink-soft: #6b6155;  /* secondary text */
+  --color-ink-faint:#a2988a;  /* tertiary, hints */
+  --color-red:      #c8452d;  /* primary accent */
+  --color-blue:     #3b5b7a;  /* secondary accent */
+  --color-olive:    #6a7146;  /* tertiary accent, used sparingly */
+
+  --font-chrome: "Silkscreen", "Chicago", ui-monospace, monospace;
+  --font-serif:  "Newsreader", "Iowan Old Style", Georgia, serif;
+  --font-mono:   "JetBrains Mono", "Cascadia Mono", Consolas, ui-monospace, monospace;
+  --font-sans:   system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body, #root { height: 100%; margin: 0; }
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  overflow: hidden;
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* The desktop pattern — a woven ink crosshatch over cream, the way a System 7
+   desktop was a tiled 2-colour pattern rather than a photograph. Four layers:
+   a warm pool of light, the diagonal weave, and a red dither on the offbeat. */
+.paper-bg {
+  background-color: var(--color-paper);
+  background-image:
+    radial-gradient(120% 90% at 22% 0%, rgba(255, 252, 245, 0.85), transparent 62%),
+    repeating-linear-gradient(45deg,  rgba(26, 23, 20, 0.045) 0 1px, transparent 1px 7px),
+    repeating-linear-gradient(-45deg, rgba(26, 23, 20, 0.045) 0 1px, transparent 1px 7px),
+    radial-gradient(rgba(200, 69, 45, 0.07) 0.5px, transparent 0.5px);
+  background-size: auto, auto, auto, 7px 7px;
+  background-position: 0 0, 0 0, 0 0, 3.5px 3.5px;
+}
+
+/* Every raised surface: 1px ink hairline + a hard offset shadow, no blur.
+   Blur reads as 2015 web; a hard shadow reads as print and as early GUI. */
+.edge {
+  border: 1px solid var(--color-ink);
+  box-shadow: 3px 3px 0 rgba(26, 23, 20, 0.16);
+}
+.edge-lg {
+  border: 1px solid var(--color-ink);
+  box-shadow: 5px 5px 0 rgba(26, 23, 20, 0.18);
+}
+/* Pressed / recessed — the shadow moves inside. */
+.edge-in {
+  border: 1px solid var(--color-ink);
+  box-shadow: inset 2px 2px 0 rgba(26, 23, 20, 0.10);
+}
+
+/* Title-bar pinstripes. Present only on the focused window, which is exactly
+   how the original signalled focus — no colour needed. */
+.pinstripe {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--color-ink) 0px, var(--color-ink) 1px,
+    transparent 1px, transparent 3px
+  );
+}
+
+/* Paper grain over the whole screen. Static, so it costs one paint. */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.32'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+
+::selection { background: var(--color-red); color: var(--color-card); }
+
+::-webkit-scrollbar { width: 13px; height: 13px; }
+::-webkit-scrollbar-track {
+  background: var(--color-shade);
+  border-left: 1px solid var(--color-ink);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-card);
+  border: 1px solid var(--color-ink);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--color-paper); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
