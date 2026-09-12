@@ -116,7 +116,17 @@ export default async function handler(req: Req, res: Res) {
     res.status(200).json({ ok: true })
   } catch (err) {
     console.error("[send-doodle]", err)
-    res.status(502).json({ error: "the mailbox refused it" })
+    /* The code and SMTP status, so a refusal can be diagnosed from outside
+       without reading the function log — EAUTH/535 means the password stored
+       here is wrong or Google blocked the sign-in, which is a very different
+       fix from a network or rate-limit failure. Deliberately not the raw
+       message, which would echo the mailbox address back to any caller. */
+    const smtp = err as { code?: string; responseCode?: number }
+    res.status(502).json({
+      error: "the mailbox refused it",
+      reason: smtp?.code ?? "unknown",
+      smtpStatus: smtp?.responseCode ?? null,
+    })
   }
 }
 
