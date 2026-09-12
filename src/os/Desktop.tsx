@@ -18,38 +18,82 @@ import { useNotes } from "../lib/notes"
 import { clearEdit, edit } from "../lib/editing"
 import { daysUntilBirthday } from "../lib/time"
 
-/* Where things sit on the desk.
+/* ── laying out the desk ──
 
-   A desk is not a shelf. The five fixed accessories get hand-placed spots
-   with deliberate gaps and overlaps of nothing; anything she pins later
-   takes the next spot in SCATTER, which cycles downward so the tenth
-   doodle lands below the fourth rather than on top of it.
+   A desktop does not scroll. It is a surface of a fixed size, and things
+   on it either fit or do not — so instead of hand-placed coordinates on a
+   canvas that grew downwards, the desk measures itself and packs what it
+   can into the space it actually has.
 
-   Left is a percentage so the layout breathes with the window; top is in
-   pixels because the desk scrolls and a percentage of an unknown height
-   means nothing. Nothing starts past 56% — the tape deck is 340px wide and
-   the desk is only ~700px across at the narrowest desktop width, so that is
-   where the right edge stops being safe. */
-const PLACES: Record<string, { left: string; top: number }> = {
-  weather:   { left: "3%",  top: 24 },
-  clock:     { left: "48%", top: 44 },
-  tape:      { left: "5%",  top: 322 },
-  countdown: { left: "56%", top: 344 },
+   Left to right, wrapping to a new row when the next thing would hang off
+   the edge, stopping entirely when the next row would fall off the bottom.
+   Nothing is ever placed on top of anything else, and nothing is ever
+   placed where she would have to scroll to see it.
+
+   Each piece has to declare its footprint, because the packer runs before
+   anything is rendered and cannot measure a card that does not exist yet.
+   These are the real measured sizes, rounded up a little; being generous
+   costs a few pixels of air, while being mean costs an overlap. */
+interface Footprint {
+  w: number
+  h: number
 }
 
-const SCATTER = [
-  { left: "4%",  top: 690 },
-  { left: "50%", top: 730 },
-  { left: "8%",  top: 960 },
-  { left: "48%", top: 1010 },
-  { left: "2%",  top: 1230 },
-  { left: "52%", top: 1290 },
-]
+const SIZE: Record<string, Footprint> = {
+  clock:     { w: 236, h: 246 },
+  weather:   { w: 258, h: 232 },
+  tape:      { w: 346, h: 300 },
+  countdown: { w: 256, h: 252 },
+  doodle:    { w: 258, h: 244 },
+  note:      { w: 274, h: 200 },
+}
 
-/** Keeps cycling down the desk once SCATTER runs out. */
-function scatterAt(i: number) {
-  const base = SCATTER[i % SCATTER.length]
-  return { left: base.left, top: base.top + Math.floor(i / SCATTER.length) * 880 }
+/** Space between pieces. Also the budget the stagger below borrows from. */
+const GAP = 20
+
+interface Piece {
+  key: string
+  node: React.ReactNode
+  size: Footprint
+}
+
+interface Placed extends Piece {
+  at: { left: number; top: number }
+}
+
+/* A tiny deterministic offset per piece, so a packed grid still reads as
+   things someone put down rather than a spreadsheet. Derived from the key
+   rather than Math.random so a re-render never makes the desk twitch, and
+   kept well inside GAP so it can never close the gap to zero. */
+function stagger(key: string) {
+  let h = 0
+  for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) | 0
+  return ((Math.abs(h) % 13) - 6)
+}
+
+/** Packs what fits and drops the rest. Never overlaps, never overflows. */
+function packDesk(pieces: Piece[], deskW: number, deskH: number): Placed[] {
+  const placed: Placed[] = []
+  let x = 0
+  let y = 0
+  let rowH = 0
+
+  for (const piece of pieces) {
+    const { w, h } = piece.size
+    /* Wrap — unless this is the first thing in the row, in which case it goes
+       in regardless or a card wider than the desk would loop forever. */
+    if (x > 0 && x + w > deskW) {
+      x = 0
+      y += rowH + GAP
+      rowH = 0
+    }
+    if (y + h > deskH) break
+    placed.push({ ...piece, at: { left: x, top: y + stagger(piece.key) } })
+    x += w + GAP
+    rowH = Math.max(rowH, h)
+  }
+
+  return placed
 }
 
 const ACCENT: Record<Accent, string> = {
@@ -102,12 +146,12 @@ export function Desktop() {
   }
 
   /* One list, so the desk can place every piece the same way — the widgets
-     that are always there, then whatever she has pinned. */
-  const furniture = [
-    { key: "clock", node: <Clock />, at: PLACES.clock },
-    { key: "weather", node: <Weather />, at: PLACES.weather },
-    { key: "tape", node: <TapeDeck onOpen={() => open("music")} />, at: PLACES.tape },
-    { key: "countdown", node: <Countdown />, at: PLACES.countdown },
+     that are always there, then whatever she has pinned, newest first. */
+  const pieces: Piece[] = [
+    { key: "clock", node: <Clock />, size: SIZE.clock },
+    { key: "weather", node: <Weather />, size: SIZE.weather },
+    { key: "tape", node: <TapeDeck onOpen={() => open("music")} />, size: SIZE.tape },
+    { key: "countdown", node: <Countdown />, size: SIZE.countdown },
     ...pins.map((pin, i) => ({
       key: pin.id,
       node: (
@@ -117,7 +161,7 @@ export function Desktop() {
           onOpen={() => { edit("doodle", pin.id); open("doodle") }}
         />
       ),
-      at: scatterAt(i),
+      size: SIZE.doodle,
     })),
     ...notes.map((note, i) => ({
       key: note.id,
@@ -128,16 +172,16 @@ export function Desktop() {
           onOpen={() => { edit("note", note.id); open("notepad") }}
         />
       ),
-      at: scatterAt(pins.length + i),
+      size: SIZE.note,
     })),
   ]
 
-  /* Absolutely positioned children do not give their parent any height, so the
-     desk has to be told how far down its furniture reaches. */
-  const deskHeight = Math.max(
-    760,
-    ...furniture.map((f) => f.at.top + 340),
-  )
+  /* The desk is exactly what is on screen: the window, less the menu bar, the
+     icon column, and a margin for the signature in the corner. */
+  const deskW = Math.max(280, viewport.w - 132 - 32)
+  const deskH = Math.max(240, viewport.h - 28 - 24 - 56)
+  const placed = isMobile ? [] : packDesk(pieces, deskW, deskH)
+  const hidden = isMobile ? 0 : pieces.length - placed.length
 
   const daysLeft = daysUntilBirthday(now)
   const frontId = wins.length
@@ -148,7 +192,11 @@ export function Desktop() {
     <div className="flex h-full flex-col">
       <MenuBar now={now} daysLeft={daysLeft} />
 
-      <div className="paper-bg grain relative min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
+      <div
+        className={`paper-bg grain relative min-h-0 flex-1 overflow-x-hidden ${
+          isMobile ? "overflow-y-auto" : "overflow-hidden"
+        }`}
+      >
         {/* ── icons: right edge on desktop, grid on phones ── */}
         <div className="grid grid-cols-4 content-start gap-x-1 gap-y-3 p-4 pt-6 sm:absolute sm:right-0 sm:top-0 sm:w-[104px] sm:grid-cols-1 sm:gap-y-1 sm:p-3">
           {APPS.map((app, i) => (
@@ -175,25 +223,31 @@ export function Desktop() {
         </div>
 
         {/* ── desk furniture ──
-             Scattered on a real screen, stacked on a phone. Absolute spots on
-             a 375px-wide screen would be a pile, not a desk, so the wrap flow
-             is kept for mobile — it is the one place a tidy column is right. */}
+             Packed into the visible surface on a real screen. A phone is the
+             one place a column and a scroll are right: three cards is all that
+             fits on a 375px screen, and dropping the rest would hide most of
+             what she made. */}
         {isMobile ? (
           <div className="flex flex-wrap content-start items-start justify-center gap-5 px-4 pb-10">
-            {furniture.map((item) => (
-              <div key={item.key}>{item.node}</div>
+            {pieces.map((piece) => (
+              <div key={piece.key}>{piece.node}</div>
             ))}
           </div>
         ) : (
-          <div
-            className="relative mr-[132px] ml-5"
-            style={{ minHeight: deskHeight }}
-          >
-            {furniture.map((item) => (
-              <div key={item.key} className="absolute" style={item.at}>
-                {item.node}
+          <div className="relative ml-5 mr-[132px] mt-5" style={{ height: deskH }}>
+            {placed.map((piece) => (
+              <div key={piece.key} className="absolute" style={piece.at}>
+                {piece.node}
               </div>
             ))}
+
+            {/* The desk is full. Saying so beats a doodle that silently is not
+                there — she opens the app and finds everything still in it. */}
+            {hidden > 0 && (
+              <div className="pointer-events-none absolute bottom-0 right-0 bg-card px-2 py-1 font-chrome text-[8px] tracking-tight text-ink-faint">
+                +{hidden} MORE — DESK IS FULL
+              </div>
+            )}
           </div>
         )}
 
@@ -202,9 +256,6 @@ export function Desktop() {
              along the bottom edge instead of shoving the furniture around. */}
         <Pet />
 
-        {/* Keeps the desk from ending flush against the signature pinned
-            below it, and gives the pet somewhere to stand. */}
-        <div className="h-24" />
       </div>
 
       {/* ── signature ──
