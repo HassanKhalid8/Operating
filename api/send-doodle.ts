@@ -47,10 +47,13 @@ export default async function handler(req: Req, res: Res) {
     return
   }
 
-  const user = process.env.GMAIL_USER?.trim()
+  /* Dashboards love to hand back a value wrapped in quotes, and SMTP AUTH is
+     not forgiving: a single stray " turns a correct password into a 535. */
+  const unquote = (v?: string) => v?.trim().replace(/^['"]|['"]$/g, "")
+  const user = unquote(process.env.GMAIL_USER)
   /* Google displays App Passwords in four spaced groups. People paste them
-     that way, and SMTP AUTH is not forgiving about it. */
-  const pass = process.env.GMAIL_APP_PASSWORD?.replace(/\s+/g, "")
+     that way, and the spaces are not part of the password. */
+  const pass = unquote(process.env.GMAIL_APP_PASSWORD)?.replace(/\s+/g, "")
   if (!user || !pass) {
     /* Missing config is the site owner's problem, not hers — the app falls
        back to the share sheet when this endpoint says no. */
