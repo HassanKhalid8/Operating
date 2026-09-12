@@ -452,9 +452,14 @@ export function Doodle() {
         window.setTimeout(() => setSendState("idle"), 5000)
         return
       }
+      /* The endpoint exists but refused. 404 means it is genuinely not
+         deployed, which is the one case worth falling through silently — for
+         anything else, say so, or a misconfigured mailbox looks to everyone
+         like the share sheet is simply how this button works. */
+      if (res.status !== 404) say(await reason(res))
     } catch {
-      /* No endpoint (running `vite` rather than `vercel dev`), or it is down.
-         Fall through to the ways that need no server at all. */
+      /* No endpoint at all (plain `vite`, or offline). Fall through to the
+         ways that need no server. */
     }
     setSendState("idle")
 
@@ -665,6 +670,13 @@ export function Doodle() {
       </div>
     </div>
   )
+}
+
+/** Turns the endpoint's refusal into something readable under the canvas. */
+async function reason(res: Response) {
+  const said = await res.json().catch(() => null)
+  const detail = said && typeof said.error === "string" ? said.error : `error ${res.status}`
+  return `couldn't mail it — ${detail}. sending it the long way instead.`
 }
 
 function hexToRgb(hex: string): [number, number, number] {

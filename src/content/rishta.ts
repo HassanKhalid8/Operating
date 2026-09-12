@@ -175,7 +175,7 @@ export const ADMIRER = {
 
 /** The one profile left in the database. */
 export const LAST_RESORT: Candidate = {
-  name: "Hassan", age: 20, city: "Lahore", seed: 1,
+  name: "Hassan", age: 20, city: "Karachi", seed: 1,
   /* ↓ DROP YOUR PHOTO AT public/faces/hassan.jpg ↓ */
   photo: "/faces/hassan.jpg",
   /* TODO: swap these for the 2–3 you actually have. Honest is funnier. */

@@ -212,7 +212,17 @@ export function MusicProvider({ children }: { children: ReactNode }) {
           }
           seekTo.current = 0
         }}
-        onEnded={next}
+        /* Only advance if the track really did run out. A server that ignores
+           Range requests cannot seek into an unbuffered part of the file, and
+           the browser reacts by firing `ended` — so dragging the scrubber to
+           0:30 would silently skip to the next song. Trusting the clock
+           instead of the event makes that impossible. */
+        onEnded={(e) => {
+          const el = e.currentTarget
+          const finished = !Number.isFinite(el.duration) || el.currentTime >= el.duration - 1.5
+          if (finished) next()
+          else setPlaying(false)
+        }}
         onPlay={() => setPlaying(true)}
         onPause={(e) => {
           setPlaying(false)

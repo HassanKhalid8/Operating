@@ -113,9 +113,15 @@ export function Notepad() {
         window.setTimeout(() => setSendState("idle"), 5000)
         return
       }
+      /* Same rule as Doodle: only a missing endpoint falls through quietly. */
+      if (res.status !== 404) {
+        const said = await res.json().catch(() => null)
+        const detail = said && typeof said.error === "string" ? said.error : `error ${res.status}`
+        say(`couldn't mail it — ${detail}. sending it the long way instead.`)
+      }
     } catch {
-      /* No endpoint, or it is down. Fall through to the ways that need no
-         server at all. */
+      /* No endpoint at all, or offline. Fall through to the ways that need no
+         server. */
     }
     setSendState("idle")
 
