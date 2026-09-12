@@ -17,8 +17,24 @@
    what it was before: local-only.
    ═══════════════════════════════════════════════════════════ */
 
-const URL_BASE = import.meta.env.VITE_SUPABASE_URL?.replace(/\/+$/, "") ?? ""
-const ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY ?? ""
+/* These two are public by design and must reach the browser — this is a static
+   site, so it cannot talk to Supabase without them. They are literals rather
+   than VITE_ environment variables because a host that classifies every
+   variable as a secret will refuse to expose a VITE_ one, and the app then
+   silently runs local-only with no error shown anywhere. An environment
+   variable still wins where one is set, so moving them back is a one-line
+   change with nothing else to adjust.
+
+   What protects the data is the row-level-security policy in
+   supabase/schema.sql, not the secrecy of this key. The `service_role` key
+   bypasses those policies and must never appear here, in this repository, or
+   anywhere else the browser can reach. */
+const FALLBACK_URL = "https://somutkulkyovdhkvxmqi.supabase.co"
+const FALLBACK_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvbXV0a3Vsa3lvdmRoa3Z4bXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMjI4NDAsImV4cCI6MjEwNDU5ODg0MH0.eLpjrSx2vIfxfaWezy-BtbKjOKXn5NrNCIlbO5ngHjE"
+
+const URL_BASE = (import.meta.env.VITE_SUPABASE_URL || FALLBACK_URL).replace(/\/+$/, "")
+const ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || FALLBACK_ANON_KEY
 const BUCKET = "doodles"
 
 /** Long enough for a cold start, short enough that she never waits on it. */
