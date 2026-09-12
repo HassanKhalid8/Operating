@@ -23,6 +23,88 @@
   --font-sans:   system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
+/* Everything that is a colour but not part of the palette: the hard shadows,
+   the desktop weave, the paper grain. Themed alongside the palette below —
+   a black offset shadow is invisible on a dark ground. */
+:root {
+  --edge-shadow:    rgba(26, 23, 20, 0.16);
+  --edge-shadow-lg: rgba(26, 23, 20, 0.18);
+  --edge-shadow-in: rgba(26, 23, 20, 0.10);
+  --weave:          rgba(26, 23, 20, 0.045);
+  --weave-dot:      rgba(200, 69, 45, 0.07);
+  --pool:           rgba(255, 252, 245, 0.85);
+  --grain:          0.35;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Themes — Edit ▸ in the menu bar. Warm paper is the default and
+   the one the whole thing was designed in; the rest are hers to
+   play with. Each one only redefines variables, so every window,
+   widget and icon follows without knowing themes exist.
+   ═══════════════════════════════════════════════════════════ */
+
+/* Cyanotype. White line on blue, the way a drawing gets printed. */
+html[data-theme="blueprint"] {
+  color-scheme: dark;
+  --color-paper:    #22405c;
+  --color-card:     #2a4d6e;
+  --color-shade:    #1a3349;
+  --color-ink:      #eef4f8;
+  --color-ink-soft: #b9cfdf;
+  --color-ink-faint:#7d9cb4;
+  --color-red:      #ffa892;
+  --color-blue:     #9cc9ea;
+  --color-olive:    #a8c8a0;
+  --edge-shadow:    rgba(0, 0, 0, 0.34);
+  --edge-shadow-lg: rgba(0, 0, 0, 0.38);
+  --edge-shadow-in: rgba(0, 0, 0, 0.26);
+  --weave:          rgba(238, 244, 248, 0.06);
+  --weave-dot:      rgba(255, 168, 146, 0.08);
+  --pool:           rgba(255, 255, 255, 0.07);
+  --grain:          0.2;
+}
+
+/* The machine at 3am. */
+html[data-theme="midnight"] {
+  color-scheme: dark;
+  --color-paper:    #14181f;
+  --color-card:     #1b212a;
+  --color-shade:    #10141a;
+  --color-ink:      #e8e4dc;
+  --color-ink-soft: #a49e94;
+  --color-ink-faint:#6e6960;
+  --color-red:      #e0654b;
+  --color-blue:     #7fa8d0;
+  --color-olive:    #9aa86a;
+  --edge-shadow:    rgba(0, 0, 0, 0.5);
+  --edge-shadow-lg: rgba(0, 0, 0, 0.55);
+  --edge-shadow-in: rgba(0, 0, 0, 0.4);
+  --weave:          rgba(232, 228, 220, 0.05);
+  --weave-dot:      rgba(224, 101, 75, 0.08);
+  --pool:           rgba(255, 255, 255, 0.05);
+  --grain:          0.22;
+}
+
+/* The one she is going to pick. */
+html[data-theme="bubblegum"] {
+  --color-paper:    #fbe6ee;
+  --color-card:     #fff7fa;
+  --color-shade:    #f2d3e0;
+  --color-ink:      #3b1d2b;
+  --color-ink-soft: #7d5266;
+  --color-ink-faint:#b98da2;
+  --color-red:      #d6336c;
+  --color-blue:     #7a5bb0;
+  --color-olive:    #4f7a5c;
+  --edge-shadow:    rgba(59, 29, 43, 0.18);
+  --edge-shadow-lg: rgba(59, 29, 43, 0.2);
+  --edge-shadow-in: rgba(59, 29, 43, 0.12);
+  --weave:          rgba(59, 29, 43, 0.05);
+  --weave-dot:      rgba(214, 51, 108, 0.09);
+  --pool:           rgba(255, 255, 255, 0.8);
+  --grain:          0.3;
+}
+
 *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body, #root { height: 100%; margin: 0; }
 
@@ -41,10 +123,10 @@ body {
 .paper-bg {
   background-color: var(--color-paper);
   background-image:
-    radial-gradient(120% 90% at 22% 0%, rgba(255, 252, 245, 0.85), transparent 62%),
-    repeating-linear-gradient(45deg,  rgba(26, 23, 20, 0.045) 0 1px, transparent 1px 7px),
-    repeating-linear-gradient(-45deg, rgba(26, 23, 20, 0.045) 0 1px, transparent 1px 7px),
-    radial-gradient(rgba(200, 69, 45, 0.07) 0.5px, transparent 0.5px);
+    radial-gradient(120% 90% at 22% 0%, var(--pool), transparent 62%),
+    repeating-linear-gradient(45deg,  var(--weave) 0 1px, transparent 1px 7px),
+    repeating-linear-gradient(-45deg, var(--weave) 0 1px, transparent 1px 7px),
+    radial-gradient(var(--weave-dot) 0.5px, transparent 0.5px);
   background-size: auto, auto, auto, 7px 7px;
   background-position: 0 0, 0 0, 0 0, 3.5px 3.5px;
 }
@@ -53,16 +135,16 @@ body {
    Blur reads as 2015 web; a hard shadow reads as print and as early GUI. */
 .edge {
   border: 1px solid var(--color-ink);
-  box-shadow: 3px 3px 0 rgba(26, 23, 20, 0.16);
+  box-shadow: 3px 3px 0 var(--edge-shadow);
 }
 .edge-lg {
   border: 1px solid var(--color-ink);
-  box-shadow: 5px 5px 0 rgba(26, 23, 20, 0.18);
+  box-shadow: 5px 5px 0 var(--edge-shadow-lg);
 }
 /* Pressed / recessed — the shadow moves inside. */
 .edge-in {
   border: 1px solid var(--color-ink);
-  box-shadow: inset 2px 2px 0 rgba(26, 23, 20, 0.10);
+  box-shadow: inset 2px 2px 0 var(--edge-shadow-in);
 }
 
 /* Title-bar pinstripes. Present only on the focused window, which is exactly
@@ -82,7 +164,7 @@ body {
   inset: 0;
   z-index: 9999;
   pointer-events: none;
-  opacity: 0.35;
+  opacity: var(--grain);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.32'/%3E%3C/svg%3E");
   mix-blend-mode: multiply;
 }
@@ -99,6 +181,14 @@ body {
   border: 1px solid var(--color-ink);
 }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-paper); }
+
+/* The desk pet's legs. A two-frame shuffle rather than a walk cycle — the
+   whole creature is 84px tall and anything smoother would be invisible. */
+@keyframes pet-step {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-3px); }
+  100% { transform: translateY(0); }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }

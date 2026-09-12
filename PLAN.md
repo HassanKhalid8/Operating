@@ -28,16 +28,19 @@ cream than glowing on black.
 |---|-----|-----------|----------|
 | 1 | **Boot + Desktop** | POST sequence, window manager, dock, drag/resize, CRT overlay | P0 |
 | 2 | **photos/** | Gallery in an old image-viewer chrome. Each photo has a caption in your voice | P0 |
-| 3 | **terminal** | Real command parser. `whoami`, `ls`, `cat`, `sudo`, hidden commands | P0 |
+| 3 | ~~terminal~~ | Cut from the desktop 10 Sep. Source still in `src/apps/Terminal.tsx` if you want it back. | — |
 | 4 | **wrapped.exe** | Story cards with REAL stats from the WhatsApp export | P0 |
 | 0a | **Desk widgets** | Note Pad, Alarm Clock, Weather, Calendar countdown, About This Computer | P0 ✔ |
 | 4a | **Tape Deck** | Desktop mini-player + full Music window, one shared audio element. Built. | P0 ✔ |
 | 4b | **Rishta Finder** | Her 29 requirements vs. a roster of men who all fail. Built. | P0 ✔ |
+| 4c | **Doodle** | MacPaint. Six brushes, a bucket, ten inks. Pin to the desk or send it to you. Built. | P0 ✔ |
+| 4d | **Desk pet** | A little machine called Hassan. Wanders, blinks, sulks if she stops petting it. Built. | P1 ✔ |
 | 5 | **locked/** | Refuses to open before 15 Sep 00:00. Then: the letter. | P0 |
-| 6 | **recordings/** | Voice notes + videos as a retro media player | P1 |
+| 6 | ~~recordings/~~ | Cut from the desktop 10 Sep. | — |
 | 7 | **the vault** | 4 riddle-locks only she can answer, each unlocks a chapter | P1 |
-| 8 | **recycle bin** | Things we're leaving behind this year. Mostly jokes. | P2 |
-| 9 | **settings** | Theme switch, a slider that does nothing, an About box | P2 |
+| 8 | **Trash** | Doodles she takes off the desk. Put back, or delete forever. Built. | P1 ✔ |
+| 8a | **Themes** | Four palettes under Edit ▸ in the menu bar. Warm paper stays the default. Built. | P2 ✔ |
+| 9 | ~~settings~~ | Cut from the desktop 10 Sep — the theme switch lives in the menu bar. | — |
 | 10 | **error popups** | Fake system dialogs that interrupt her at random. Cancel doesn't work. | P2 |
 
 P0 = must ship. P1 = ship if on schedule. P2 = garnish.
@@ -99,6 +102,48 @@ now and an empty note renders nothing, so the app looks clean until you fill the
 
 To reorder the tape, renumber the filenames and re-run the script.
 
+### Doodle + the desk pet — `src/content/doodle.ts`, `src/content/pet.ts` ✔ built
+Both work end to end; only the words are yours to change.
+
+**Doodle.** Pen, marker, pencil, spray, eraser and a paint bucket; four nib sizes; ten inks from the
+OS palette plus a custom picker; undo and clear. Two ways out of it:
+
+- **Pin to desk** — the doodle is scaled to 440px, written to *her browser's* localStorage, and hung
+  on the desk in a pinstriped frame. It is still there on the next visit. **No database, no server**
+  — see the note below for what that does and does not survive.
+- **Send to Hassan** — on her phone this opens the share sheet with the PNG attached (WhatsApp,
+  mail, whatever she uses). On a laptop there is no share sheet, so the PNG downloads and her mail
+  client opens pre-addressed to `CONFIG.contact.email`, which she then attaches by hand. That
+  address ships inside the deployed bundle, so use one you don't mind a scraper finding.
+
+**The desk pet** walks along the bottom of the desk, blinks, and has four faces. It goes from happy
+to bored at 30s, needy at 80s, and sad at 165s since she last petted it — sad stops it walking, and
+it stays sad between visits, so if she comes back tomorrow it is already sulking. Petting it resets
+everything and throws a heart. It is named after you: `CONFIG.from`.
+
+Its lines are in `src/content/pet.ts` — seven short lists (greet, petted, spoiled, bored, needy,
+sad, away). They are written, but they are my guess at your voice; go through them. Keep them under
+about eight words, they render in a 196px bubble for four seconds.
+
+### Themes — `src/lib/theme.ts` + the blocks at the top of `src/index.css` ✔ built
+Four of them, in **Edit ▸ Desktop Pattern**, with a tick beside the live one:
+
+| | | |
+|---|---|---|
+| **Warm Paper** | the default, and the palette everything was designed in | unchanged |
+| **Blueprint** | white line on cyanotype blue | dark |
+| **Midnight** | the machine at 3am | dark |
+| **Bubblegum** | the one she is going to pick | light pink |
+
+Each theme is nothing but a block of CSS variables, so every window, widget, icon and the pet follow
+without knowing themes exist — nothing has a hardcoded colour any more except a doodle's own paper,
+which stays cream on purpose so a drawing looks like paper lying on the desk rather than repainting
+itself. Her choice is remembered in `localStorage`, and it is applied before the first paint, so
+Midnight boots dark instead of flashing cream. Every accent in the three new themes was checked to
+contrast at least as well against its own surfaces as warm paper's does.
+
+To add a fifth: one block in `index.css` and one line in `THEMES` in `src/lib/theme.ts`.
+
 ### Voice notes / video — `content/media/`
 Anything short. Yours, or ones you've collected. These get hidden, not displayed.
 
@@ -134,6 +179,23 @@ actually have — honest is funnier than generous.
 
 ## Notes
 
+- **Storage — Supabase, with localStorage underneath.** See [SETUP.md](SETUP.md) for the ten
+  minutes of dashboard work. Her theme, the tape position and her doodles go to Postgres and a
+  storage bucket, so they survive a new phone and a cleared browser; everything is still written to
+  `localStorage` first and read from there on boot, so the desk paints instantly and works with the
+  wifi off. Every cloud call may fail — 8-second timeout, falls back to the local copy, never throws
+  into the UI. With the env vars unset the site is local-only exactly as it was.
+  The pet's memory (`khinsaos.pet.v1`) stays on the device on purpose: it is meant to be forgetful.
+- **Trash.** Taking a doodle off the desk moves it to the Trash, keeping its cloud row and its
+  full-size file, so *put back* restores the real drawing rather than re-uploading the small local
+  thumbnail. Which ones are binned is synced as a list of ids in `desk_state`, so no schema change
+  was needed and the bin looks the same on every device. Only *forever* destroys anything, and it
+  asks twice before it does.
+- **Mailing a doodle.** `api/send-doodle.ts` on Vercel, sending through your Gmail with an App
+  Password held in Vercel's environment. The Send button tries it first, then the phone's share
+  sheet, then a download plus a pre-addressed mailto. The recipient is always read from the
+  environment and never from the request — an endpoint that mails wherever the caller says is an
+  open relay.
 - **Weather widget** calls `api.open-meteo.com` at runtime. Keyless, CORS-open, no account, and it
   sends nothing but the coordinates in `CONFIG.place` — currently Lahore. Change the city there if
   she isn't in Lahore. If the API is unreachable the widget says so rather than spinning.

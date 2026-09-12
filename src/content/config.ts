@@ -8,6 +8,11 @@ export const CONFIG = {
   /** Her age on the 15th — becomes the OS version number. TODO: confirm. */
   age: 21,
 
+  /** Where a doodle goes when she hits Send and her phone has no share sheet.
+      This string ships inside the deployed bundle, so use an address you do
+      not mind a scraper finding. */
+  contact: { email: "hassank8125@gmail.com" },
+
   /** Midnight, 15 Sep 2026, Pakistan Standard Time (UTC+5). */
   birthday: new Date("2026-09-15T00:00:00+05:00"),
 

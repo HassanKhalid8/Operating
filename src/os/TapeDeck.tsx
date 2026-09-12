@@ -9,7 +9,7 @@ import { CONFIG } from "../content/config"
 function Reel({ spinning }: { spinning: boolean }) {
   return (
     <motion.svg
-      viewBox="0 0 40 40" width="34" height="34"
+      viewBox="0 0 40 40" width="44" height="44"
       animate={spinning ? { rotate: 360 } : { rotate: 0 }}
       transition={spinning ? { duration: 2.4, repeat: Infinity, ease: "linear" } : { duration: 0.3 }}
       aria-hidden
@@ -50,7 +50,7 @@ export function TapeDeck({ onOpen }: { onOpen: () => void }) {
         press.current = null
         if (p && Math.hypot(e.clientX - p.x, e.clientY - p.y) < 6) onOpen()
       }}
-      className="edge-lg relative w-[260px] shrink-0 cursor-grab bg-card"
+      className="edge-lg relative w-[340px] shrink-0 cursor-grab bg-card"
     >
       <div className="pinstripe flex h-6 items-center border-b border-ink px-2">
         <span className="mx-auto bg-card px-2 font-chrome text-[9px] tracking-tight text-ink">
@@ -59,21 +59,21 @@ export function TapeDeck({ onOpen }: { onOpen: () => void }) {
       </div>
 
       {/* reels, with the tape strung between them */}
-      <div className="relative flex items-center justify-between px-6 pb-1 pt-4">
-        <div className="absolute inset-x-10 top-[30px] h-[3px] border-y border-ink bg-shade" />
+      <div className="relative flex items-center justify-between px-9 pb-2 pt-5">
+        <div className="absolute inset-x-14 top-[38px] h-[3px] border-y border-ink bg-shade" />
         <Reel spinning={playing} />
         <Reel spinning={playing} />
       </div>
 
       {/* the label stuck on the shell, in someone's handwriting */}
       <div className="mx-4 mt-3 border border-ink/30 bg-paper px-2 py-1 text-center">
-        <div className="truncate font-serif text-[13px] italic leading-tight text-ink">
+        <div className="truncate font-serif text-[15px] italic leading-tight text-ink">
           {CONFIG.tapeName}
         </div>
       </div>
 
       <div className="px-4 pb-1 pt-3">
-        <div className="truncate font-serif text-[14px] leading-tight text-ink">
+        <div className="truncate font-serif text-[16px] leading-tight text-ink">
           <span className="font-mono text-[10px] text-ink-faint">
             {String(index + 1).padStart(2, "0")}{" "}
           </span>

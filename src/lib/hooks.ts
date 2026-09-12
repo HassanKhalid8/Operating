@@ -21,3 +21,14 @@ export function useNow(intervalMs = 1000) {
   }, [intervalMs])
   return now
 }
+
+/** Viewport size. Windows use it to keep their own title bar reachable. */
+export function useViewport() {
+  const [size, setSize] = useState(() => ({ w: window.innerWidth, h: window.innerHeight }))
+  useEffect(() => {
+    const on = () => setSize({ w: window.innerWidth, h: window.innerHeight })
+    window.addEventListener("resize", on)
+    return () => window.removeEventListener("resize", on)
+  }, [])
+  return size
+}

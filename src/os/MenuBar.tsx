@@ -1,53 +1,47 @@
 import { useState } from "react"
 import { CONFIG, osVersion } from "../content/config"
+import { setTheme, THEMES, useTheme } from "../lib/theme"
 
-const MENUS: Record<string, string[]> = {
-  File: ["New Memory…  ⌘N", "Close  ⌘W", "———", "Forget Everything  (disabled)"],
-  Edit: ["Undo Last Year  ⌘Z", "Cut", "Copy", "Paste", "———", "Select All Feelings  ⌘A"],
-  Special: ["Empty Trash", "Restart", "———", "Shut Down  (don't)"],
-}
-
-/** The strip along the top. Menus open, but every item is a joke that does
-    nothing — the point is that the machine feels real, not that it works. */
+/** The strip along the top. One menu, and everything in it works — the jokes
+    that used to sit under File and Special were a menu full of dead ends. */
 export function MenuBar({ now, daysLeft }: { now: number; daysLeft: number }) {
-  const [open, setOpen] = useState<string | null>(null)
+  const [open, setOpen] = useState(false)
+  const theme = useTheme()
 
   return (
     <div
       className="relative z-[200] flex h-7 shrink-0 select-none items-center border-b border-ink bg-card px-2 font-chrome text-[10px] tracking-tight"
-      onPointerLeave={() => setOpen(null)}
+      onPointerLeave={() => setOpen(false)}
     >
       <span className="px-2 text-red">✻</span>
 
-      {Object.keys(MENUS).map((m) => (
-        <div key={m} className="relative">
-          <button
-            onClick={() => setOpen((o) => (o === m ? null : m))}
-            onPointerEnter={() => setOpen((o) => (o ? m : o))}
-            className={`px-2 py-1 ${open === m ? "bg-ink text-card" : "hover:bg-ink/10"}`}
-          >
-            {m}
-          </button>
+      <div className="relative">
+        <button
+          onClick={() => setOpen((o) => !o)}
+          className={`px-2 py-1 ${open ? "bg-ink text-card" : "hover:bg-ink/10"}`}
+        >
+          Edit
+        </button>
 
-          {open === m && (
-            <div className="edge absolute left-0 top-full min-w-52 bg-card py-1">
-              {MENUS[m].map((item, i) =>
-                item === "———" ? (
-                  <div key={i} className="my-1 h-px bg-ink/20" />
-                ) : (
-                  <div
-                    key={i}
-                    className="cursor-default px-3 py-1 text-[10px] text-ink-faint"
-                    title="Nothing here works. That's the joke."
-                  >
-                    {item}
-                  </div>
-                ),
-              )}
-            </div>
-          )}
-        </div>
-      ))}
+        {open && (
+          <div className="edge absolute left-0 top-full min-w-52 bg-card py-1">
+            <div className="px-3 py-1 text-[9px] text-ink-faint/70">Desktop Pattern</div>
+            {THEMES.map((t) => (
+              <button
+                key={t.id}
+                onClick={() => { setTheme(t.id); setOpen(false) }}
+                title={t.note}
+                className="flex w-full items-center gap-2 px-3 py-1 text-left text-[10px] text-ink hover:bg-ink hover:text-card"
+              >
+                {/* The tick keeps its column whether or not it is shown, so the
+                    labels do not shuffle sideways. */}
+                <span className="w-2 shrink-0 text-red">{theme === t.id ? "✓" : ""}</span>
+                {t.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
 
       <div className="flex-1" />
 

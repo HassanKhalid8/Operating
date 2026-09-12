@@ -14,12 +14,12 @@ export function Countdown() {
   const secs = Math.floor((left % 60_000) / 1000)
 
   return (
-    <Widget title="CALENDAR" rotate={1.4} delay={0.62} width={188}>
-      <div className="px-4 pb-4 pt-3 text-center">
-        <div className="font-chrome text-[9px] tracking-tight text-ink-soft">SEPTEMBER</div>
+    <Widget title="CALENDAR" rotate={1.4} delay={0.62} width={248}>
+      <div className="px-5 pb-5 pt-4 text-center">
+        <div className="font-chrome text-[10px] tracking-tight text-ink-soft">SEPTEMBER</div>
 
         <div className="relative mx-auto mt-1 w-fit">
-          <div className="font-serif text-[62px] leading-none text-ink">15</div>
+          <div className="font-serif text-[86px] leading-none text-ink">15</div>
           {/* hand-drawn ring around the date, in red pen */}
           <svg viewBox="0 0 100 80" className="pointer-events-none absolute -inset-2" aria-hidden>
             <ellipse
@@ -33,7 +33,7 @@ export function Countdown() {
 
         <div className="mt-4 border-t border-ink/15 pt-3">
           {here ? (
-            <div className="font-serif text-[17px] leading-tight text-red">
+            <div className="font-serif text-[20px] leading-tight text-red">
               it’s today.
               <br />
               <span className="text-ink-soft">happy birthday.</span>

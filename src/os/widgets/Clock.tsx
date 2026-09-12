@@ -15,9 +15,9 @@ export function Clock() {
   const hand = (turns: number, per: number) => turns * (360 / per) - 90
 
   return (
-    <Widget title="ALARM CLOCK" rotate={-1.2} delay={0.55} width={168}>
-      <div className="flex flex-col items-center px-4 pb-3 pt-4">
-        <svg viewBox="0 0 100 100" width="104" height="104" aria-hidden>
+    <Widget title="ALARM CLOCK" rotate={-1.2} delay={0.55} width={230}>
+      <div className="flex flex-col items-center px-4 pb-4 pt-5">
+        <svg viewBox="0 0 100 100" width="150" height="150" aria-hidden>
           <g stroke="var(--color-ink)" fill="none">
             <circle cx="50" cy="50" r="46" strokeWidth="1.5" fill="var(--color-paper)" />
             {/* hour ticks — long on the quarters */}
@@ -56,7 +56,7 @@ export function Clock() {
           <circle cx="50" cy="50" r="2.6" fill="var(--color-ink)" />
         </svg>
 
-        <div className="mt-2 font-mono text-[10px] tracking-wide text-ink-soft">
+        <div className="mt-2.5 font-mono text-[11px] tracking-wide text-ink-soft">
           {d.toLocaleDateString([], { weekday: "short", day: "numeric", month: "short" })}
         </div>
       </div>

@@ -131,7 +131,7 @@ export const ROSTER: Candidate[] = [
     meets: ["cute", "pyara", "baal", "gora", "body", "veiny", "lamba", "funny", "humor",
             "gaane", "drive", "surprise", "khush", "letters", "protective", "loyal"],
     fatal: "baat",
-    verdict: "Does not listen. Asked your name three times. Guessed 'Hina' on all three.",
+    verdict: "Does not listen. Asked your name three times. Guessed 'Khinza' on all three.",
   },
   {
     name: "Saad", age: 26, city: "Karachi", seed: 8, photo: "/faces/saad.jpg",
