@@ -129,6 +129,11 @@ export default async function handler(req: Req, res: Res) {
       error: "the mailbox refused it",
       reason: smtp?.code ?? "unknown",
       smtpStatus: smtp?.responseCode ?? null,
+      /* Shapes, never values. A 16-character password and a plausible address
+         mean the credentials stored here are intact and the refusal is coming
+         from the account side; anything else means the value in the host is
+         truncated or mistyped. Neither number reveals a secret. */
+      shape: { userChars: user.length, passChars: pass.length },
     })
   }
 }
