@@ -7,6 +7,10 @@ interface Props {
   win: WindowState
   isMobile: boolean
   focused: boolean
+  /** A window that cannot be closed or moved — the quiz, while it is running. */
+  locked?: boolean
+  /** Switched off entirely: visible, but not touchable or focusable. */
+  inert?: boolean
   /** Viewport, so a window can never be dragged somewhere she can't grab it. */
   viewport: { w: number; h: number }
   onFocus: () => void
@@ -22,7 +26,7 @@ const KEEP = 140
 const MENU = 28
 
 export function Window({
-  app, win, isMobile, focused, viewport, onFocus, onClose, onMove, children,
+  app, win, isMobile, focused, locked, inert, viewport, onFocus, onClose, onMove, children,
 }: Props) {
   const controls = useDragControls()
 
@@ -56,20 +60,29 @@ export function Window({
      did it. An unfocused window's title bar is simply blank. */
   const chrome = (
     <div
-      onPointerDown={(e) => { if (!isMobile) controls.start(e) }}
+      onPointerDown={(e) => { if (!isMobile && !locked) controls.start(e) }}
       className={`relative flex h-7 shrink-0 touch-none select-none items-center border-b border-ink px-1.5 ${
         focused ? "pinstripe" : "bg-card"
       }`}
-      style={{ cursor: isMobile ? "default" : "grab" }}
+      style={{ cursor: isMobile || locked ? "default" : "grab" }}
     >
-      <button
-        onPointerDown={(e) => e.stopPropagation()}
-        onClick={onClose}
-        aria-label={`Close ${app.label}`}
-        className="grid h-[13px] w-[13px] shrink-0 place-items-center border border-ink bg-card text-[8px] leading-none text-ink hover:bg-red hover:text-card"
-      >
-        ✕
-      </button>
+      {locked ? (
+        /* A filled box where the close box was, so the missing ✕ reads as
+           deliberate rather than broken. */
+        <span
+          title="Locked until you finish"
+          className="h-[13px] w-[13px] shrink-0 border border-ink bg-ink"
+        />
+      ) : (
+        <button
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={onClose}
+          aria-label={`Close ${app.label}`}
+          className="grid h-[13px] w-[13px] shrink-0 place-items-center border border-ink bg-card text-[8px] leading-none text-ink hover:bg-red hover:text-card"
+        >
+          ✕
+        </button>
+      )}
 
       {/* The title sits in a card-coloured cartouche that masks the stripes. */}
       <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 whitespace-nowrap bg-card px-2 font-chrome text-[10px] tracking-tight text-ink">
@@ -88,6 +101,7 @@ export function Window({
         exit={{ y: "100%" }}
         transition={{ type: "spring", stiffness: 380, damping: 38 }}
         className="pointer-events-auto fixed inset-x-0 bottom-0 top-7 flex flex-col border-t border-ink bg-card"
+        inert={inert}
         style={{ zIndex: 40 + win.z }}
       >
         {chrome}
@@ -111,6 +125,7 @@ export function Window({
       exit={{ opacity: 0, scale: 0.97 }}
       transition={{ duration: 0.14, ease: "easeOut" }}
       className="edge-lg pointer-events-auto absolute left-0 top-0 flex flex-col overflow-hidden bg-card"
+      inert={inert}
       style={{ x, y, width: win.w, height: win.h, zIndex: 40 + win.z }}
     >
       {chrome}

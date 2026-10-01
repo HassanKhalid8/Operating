@@ -28,6 +28,8 @@ interface Req {
         caption?: unknown
         filename?: unknown
         note?: { title?: unknown; body?: unknown }
+        /** "quiz" marks a note that is her quiz result sheet. */
+        kind?: unknown
       }
     | string
     | null
@@ -71,6 +73,8 @@ export default async function handler(req: Req, res: Res) {
   const noteTitle = typeof body?.note?.title === "string" ? body.note.title.slice(0, 80) : ""
   const noteBody = typeof body?.note?.body === "string" ? body.note.body : ""
   const isNote = noteBody.trim().length > 0
+  /* The quiz result travels as a note; it only changes the subject line. */
+  const isQuiz = isNote && body?.kind === "quiz"
 
   if (!isNote) {
     if (!png.startsWith(PNG_PREFIX)) {
@@ -97,14 +101,16 @@ export default async function handler(req: Req, res: Res) {
     await transport.sendMail({
       from: `KhinsaOS <${user}>`,
       to: process.env.MAIL_TO || user,
-      subject: isNote
+      subject: isQuiz
+        ? `She finished the quiz — ${title}`
+        : isNote
         ? `She wrote you something — "${title}"`
         : `She drew you something — "${title}"`,
       /* A note goes in the body, where it is readable from the notification
          without opening anything. A drawing cannot, so it goes as a file and
          the body just says where it came from. */
       text: isNote
-        ? `${noteBody}\n\n—\nWritten on the desk, ${new Date().toUTCString()}`
+        ? `${noteBody}\n\n—\n${isQuiz ? "Filed by The Quiz" : "Written on the desk"}, ${new Date().toUTCString()}`
         : `Straight off the desk.\n\nTitle: ${title}\nSent: ${new Date().toUTCString()}`,
       attachments: isNote
         ? []

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { APPS, APP_BY_ID } from "./registry"
 import { Window } from "./Window"
@@ -16,6 +16,7 @@ import { useIsMobile, useNow, useViewport } from "../lib/hooks"
 import { usePins } from "../lib/pins"
 import { useNotes } from "../lib/notes"
 import { clearEdit, edit } from "../lib/editing"
+import { useQuizLocked } from "../lib/quizLock"
 import { daysUntilBirthday } from "../lib/time"
 
 /* ── laying out the desk ──
@@ -96,6 +97,9 @@ function packDesk(pieces: Piece[], deskW: number, deskH: number): Placed[] {
   return placed
 }
 
+/** Where the quiz window sits while it is running: above every other window. */
+const QUIZ_Z = 100_000
+
 const ACCENT: Record<Accent, string> = {
   red: "var(--color-red)",
   blue: "var(--color-blue)",
@@ -114,6 +118,8 @@ export function Desktop() {
   const viewport = useViewport()
   const pins = usePins()
   const notes = useNotes()
+  /* While the quiz runs, the quiz is the only thing on this machine. */
+  const locked = useQuizLocked()
 
   function open(id: AppId) {
     const z = ++zRef.current
@@ -136,6 +142,12 @@ export function Desktop() {
       }]
     })
   }
+
+  /* Locked at boot means she reloaded mid-quiz: put her straight back in it. */
+  useEffect(() => {
+    if (locked) open("quiz")
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locked])
 
   const close = (id: AppId) => setWins((ws) => ws.filter((w) => w.id !== id))
   const move = (id: AppId, x: number, y: number) =>
@@ -190,9 +202,13 @@ export function Desktop() {
 
   return (
     <div className="flex h-full flex-col">
-      <MenuBar now={now} daysLeft={daysLeft} />
+      <div className="shrink-0" inert={locked}>
+        <MenuBar now={now} daysLeft={daysLeft} />
+      </div>
+      {locked && <div className="pointer-events-none fixed inset-x-0 top-0 z-[250] h-7 bg-ink/35" />}
 
       <div
+        inert={locked}
         className={`paper-bg grain relative min-h-0 flex-1 overflow-x-hidden ${
           isMobile ? "overflow-y-auto" : "overflow-hidden"
         }`}
@@ -279,6 +295,20 @@ export function Desktop() {
            moving there, and one dragged low stretched the desk's scroll height.
            The layer ignores the pointer; each window takes it back. */}
       <div className="pointer-events-none fixed inset-x-0 bottom-0 top-7 z-40">
+        {/* The rest of the machine, dimmed and switched off, under the quiz. */}
+        <AnimatePresence>
+          {locked && (
+            <motion.div
+              key="quiz-dim"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="pointer-events-auto absolute inset-0 bg-ink/35"
+              style={{ zIndex: 40 + QUIZ_Z - 1 }}
+            />
+          )}
+        </AnimatePresence>
+
         <AnimatePresence>
           {wins.map((w) => {
             const app = APP_BY_ID[w.id]
@@ -286,7 +316,9 @@ export function Desktop() {
               <Window
                 key={w.id}
                 app={app}
-                win={w}
+                win={locked && w.id === "quiz" ? { ...w, z: QUIZ_Z } : w}
+                locked={locked && w.id === "quiz"}
+                inert={locked && w.id !== "quiz"}
                 isMobile={isMobile}
                 viewport={viewport}
                 focused={frontId === w.id}

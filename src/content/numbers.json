@@ -1,0 +1,510 @@
+{
+  "generated": "2026-09-29T15:42:03.807Z",
+  "instagram": {
+    "range": {
+      "from": "2026-08-09",
+      "to": "2026-09-28",
+      "fromLabel": "9 August",
+      "toLabel": "28 September",
+      "days": 51,
+      "activeDays": 51
+    },
+    "total": 23869,
+    "count": {
+      "her": 12199,
+      "me": 11670
+    },
+    "perDayAvg": 468,
+    "busiestDay": {
+      "label": "25 August",
+      "n": 1459
+    },
+    "streak": 51,
+    "longestGapHours": 21,
+    "hours": [
+      1983,
+      3670,
+      3297,
+      1406,
+      12,
+      0,
+      36,
+      38,
+      66,
+      223,
+      307,
+      461,
+      835,
+      1278,
+      1073,
+      1019,
+      907,
+      1105,
+      651,
+      1186,
+      888,
+      883,
+      1122,
+      1423
+    ],
+    "topHour": 1,
+    "lateNight": {
+      "n": 10368,
+      "pct": 43
+    },
+    "starts": {
+      "her": 51,
+      "me": 49
+    },
+    "questions": {
+      "her": 1826,
+      "me": 941
+    },
+    "sorry": {
+      "her": 57,
+      "me": 54
+    },
+    "yaar": {
+      "spellings": [
+        [
+          "yar",
+          128
+        ],
+        [
+          "yarr",
+          126
+        ],
+        [
+          "yarrr",
+          115
+        ],
+        [
+          "yarrrr",
+          49
+        ],
+        [
+          "yarrrrr",
+          20
+        ],
+        [
+          "yarrrrrr",
+          12
+        ],
+        [
+          "yaarrr",
+          8
+        ],
+        [
+          "yaarr",
+          8
+        ],
+        [
+          "yarrrrrrr",
+          7
+        ],
+        [
+          "yaaarr",
+          7
+        ],
+        [
+          "yaarrrr",
+          5
+        ],
+        [
+          "yaaarrrrr",
+          3
+        ],
+        [
+          "yaaarrr",
+          2
+        ],
+        [
+          "yaar",
+          2
+        ],
+        [
+          "yaaaarrrrrrrrrr",
+          1
+        ],
+        [
+          "yarrrrrrrrrr",
+          1
+        ],
+        [
+          "yaarrrrr",
+          1
+        ],
+        [
+          "yarrrrrrrrr",
+          1
+        ],
+        [
+          "yaaarrrrrr",
+          1
+        ],
+        [
+          "yaarrrrrr",
+          1
+        ]
+      ],
+      "total": 498,
+      "correct": 2
+    },
+    "hassan": {
+      "total": 104,
+      "longest": "hassannnnnn"
+    },
+    "emoji": {
+      "top": "😭",
+      "her": 2957,
+      "me": 1621,
+      "myTop": "😭"
+    },
+    "longestWords": {
+      "her": 128,
+      "me": 204
+    }
+  },
+  "whatsapp": {
+    "range": {
+      "from": "2026-08-26",
+      "to": "2026-09-29",
+      "fromLabel": "26 August",
+      "toLabel": "29 September",
+      "days": 35,
+      "activeDays": 35
+    },
+    "total": 12204,
+    "count": {
+      "her": 5972,
+      "me": 6232
+    },
+    "perDayAvg": 349,
+    "busiestDay": {
+      "label": "30 August",
+      "n": 1099
+    },
+    "streak": 35,
+    "longestGapHours": 47,
+    "hours": [
+      1192,
+      647,
+      460,
+      319,
+      15,
+      11,
+      205,
+      193,
+      140,
+      63,
+      244,
+      281,
+      914,
+      643,
+      571,
+      754,
+      421,
+      774,
+      374,
+      715,
+      769,
+      565,
+      1306,
+      628
+    ],
+    "topHour": 22,
+    "lateNight": {
+      "n": 2633,
+      "pct": 22
+    },
+    "starts": {
+      "her": 33,
+      "me": 21
+    },
+    "questions": {
+      "her": 1063,
+      "me": 520
+    },
+    "sorry": {
+      "her": 29,
+      "me": 38
+    },
+    "yaar": {
+      "spellings": [
+        [
+          "yarr",
+          62
+        ],
+        [
+          "yar",
+          59
+        ],
+        [
+          "yarrr",
+          50
+        ],
+        [
+          "yarrrr",
+          27
+        ],
+        [
+          "yarrrrr",
+          8
+        ],
+        [
+          "yaarrr",
+          6
+        ],
+        [
+          "yaarr",
+          3
+        ],
+        [
+          "yaaarr",
+          3
+        ],
+        [
+          "yarrrrrrrr",
+          2
+        ],
+        [
+          "yarrrrrr",
+          2
+        ],
+        [
+          "yarrrrrrr",
+          2
+        ],
+        [
+          "yaarrrr",
+          2
+        ],
+        [
+          "yaaaarrrrr",
+          1
+        ],
+        [
+          "yaarrrrr",
+          1
+        ],
+        [
+          "yaaaaarrrrr",
+          1
+        ],
+        [
+          "yarrrrrrrrr",
+          1
+        ],
+        [
+          "yaaarrrrrr",
+          1
+        ],
+        [
+          "yaar",
+          1
+        ],
+        [
+          "yaaarrr",
+          1
+        ],
+        [
+          "yaarrrrrr",
+          1
+        ]
+      ],
+      "total": 234,
+      "correct": 1
+    },
+    "hassan": {
+      "total": 66,
+      "longest": "hassannnnnnnn"
+    },
+    "emoji": {
+      "top": "😭",
+      "her": 1313,
+      "me": 915,
+      "myTop": "😭"
+    },
+    "longestWords": {
+      "her": 116,
+      "me": 612
+    }
+  },
+  "both": {
+    "range": {
+      "from": "2026-08-09",
+      "to": "2026-09-29",
+      "fromLabel": "9 August",
+      "toLabel": "29 September",
+      "days": 52,
+      "activeDays": 52
+    },
+    "total": 36073,
+    "count": {
+      "her": 18171,
+      "me": 17902
+    },
+    "perDayAvg": 694,
+    "busiestDay": {
+      "label": "25 August",
+      "n": 1459
+    },
+    "streak": 52,
+    "longestGapHours": 10,
+    "hours": [
+      3175,
+      4317,
+      3757,
+      1725,
+      27,
+      11,
+      241,
+      231,
+      206,
+      286,
+      551,
+      742,
+      1749,
+      1921,
+      1644,
+      1773,
+      1328,
+      1879,
+      1025,
+      1901,
+      1657,
+      1448,
+      2428,
+      2051
+    ],
+    "topHour": 1,
+    "lateNight": {
+      "n": 13001,
+      "pct": 36
+    },
+    "starts": {
+      "her": 41,
+      "me": 31
+    },
+    "questions": {
+      "her": 2889,
+      "me": 1461
+    },
+    "sorry": {
+      "her": 86,
+      "me": 92
+    },
+    "yaar": {
+      "spellings": [
+        [
+          "yarr",
+          188
+        ],
+        [
+          "yar",
+          187
+        ],
+        [
+          "yarrr",
+          165
+        ],
+        [
+          "yarrrr",
+          76
+        ],
+        [
+          "yarrrrr",
+          28
+        ],
+        [
+          "yarrrrrr",
+          14
+        ],
+        [
+          "yaarrr",
+          14
+        ],
+        [
+          "yaarr",
+          11
+        ],
+        [
+          "yaaarr",
+          10
+        ],
+        [
+          "yarrrrrrr",
+          9
+        ],
+        [
+          "yaarrrr",
+          7
+        ],
+        [
+          "yaaarrrrr",
+          3
+        ],
+        [
+          "yaaarrr",
+          3
+        ],
+        [
+          "yaar",
+          3
+        ],
+        [
+          "yaarrrrr",
+          2
+        ],
+        [
+          "yarrrrrrrrr",
+          2
+        ],
+        [
+          "yaaarrrrrr",
+          2
+        ],
+        [
+          "yaarrrrrr",
+          2
+        ],
+        [
+          "yarrrrrrrr",
+          2
+        ],
+        [
+          "yaaaarrrrrrrrrr",
+          1
+        ],
+        [
+          "yarrrrrrrrrr",
+          1
+        ],
+        [
+          "yaaaarrrrr",
+          1
+        ],
+        [
+          "yaaaaarrrrr",
+          1
+        ]
+      ],
+      "total": 732,
+      "correct": 3
+    },
+    "hassan": {
+      "total": 170,
+      "longest": "hassannnnnnnn"
+    },
+    "emoji": {
+      "top": "😭",
+      "her": 4270,
+      "me": 2536,
+      "myTop": "😭"
+    },
+    "longestWords": {
+      "her": 128,
+      "me": 612
+    }
+  }
+}

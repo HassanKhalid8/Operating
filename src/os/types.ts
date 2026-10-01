@@ -1,8 +1,9 @@
 import type { ComponentType } from "react"
 
 export type AppId =
-  | "photos" | "wrapped" | "locked"
-  | "vault" | "bin" | "rishta" | "music" | "doodle" | "notepad"
+  | "wrapped" | "locked"
+  | "bin" | "rishta" | "music" | "doodle" | "notepad" | "quiz" | "film"
+  | "court" | "gpt" | "terms"
 
 export type Accent = "red" | "blue" | "olive" | "ink"
 

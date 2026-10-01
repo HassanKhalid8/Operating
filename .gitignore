@@ -26,3 +26,9 @@ dist-ssr
 # local secrets
 .env.local
 .env
+
+# the original, full-bitrate edit - public/video/edit.mp4 is the web copy that ships
+/edit.mp4
+
+# the raw chat export - parsed locally, never committed or deployed
+content/raw/

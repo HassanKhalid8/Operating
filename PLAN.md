@@ -27,7 +27,7 @@ cream than glowing on black.
 | # | App | What it is | Priority |
 |---|-----|-----------|----------|
 | 1 | **Boot + Desktop** | POST sequence, window manager, dock, drag/resize, CRT overlay | P0 |
-| 2 | **photos/** | Gallery in an old image-viewer chrome. Each photo has a caption in your voice | P0 |
+| 2 | ~~photos/~~ | Cut 1 Oct — never built past the placeholder. | — |
 | 3 | ~~terminal~~ | Cut from the desktop 10 Sep. Source still in `src/apps/Terminal.tsx` if you want it back. | — |
 | 4 | **wrapped.exe** | Story cards with REAL stats from the WhatsApp export | P0 |
 | 0a | **Desk widgets** | Note Pad, Alarm Clock, Weather, Calendar countdown, About This Computer | P0 ✔ |
@@ -37,7 +37,10 @@ cream than glowing on black.
 | 4d | **Desk pet** | A little machine called Hassan. Wanders, blinks, sulks if she stops petting it. Built. | P1 ✔ |
 | 5 | **locked/** | Refuses to open before 15 Sep 00:00. Then: the letter. | P0 |
 | 6 | ~~recordings/~~ | Cut from the desktop 10 Sep. | — |
-| 7 | **the vault** | 4 riddle-locks only she can answer, each unlocks a chapter | P1 |
+| 7 | ~~the vault~~ | Cut 1 Oct — never built past the placeholder. | — |
+| 7a | **Khinsa Court** | Eight charges, real counts from the chats as evidence. Every plea ends in GUILTY. Built. | P1 ✔ |
+| 7b | **KhinsaGPT** | A chatbot that answers in her own catchphrases. No model, nothing leaves the browser. Built. | P1 ✔ |
+| 7c | **The Terms** | The friendship licence agreement. Decline runs away. Built. | P1 ✔ |
 | 8 | **Trash** | Doodles she takes off the desk. Put back, or delete forever. Built. | P1 ✔ |
 | 8a | **Themes** | Four palettes under Edit ▸ in the menu bar. Warm paper stays the default. Built. | P2 ✔ |
 | 9 | ~~settings~~ | Cut from the desktop 10 Sep — the theme switch lives in the menu bar. | — |

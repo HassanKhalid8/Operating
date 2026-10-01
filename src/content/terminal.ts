@@ -23,8 +23,8 @@ export const COMMANDS: Record<string, string | string[]> = {
   ],
 
   ls: [
-    "photos/   terminal   wrapped.exe   recordings/",
-    "vault/    bin/       settings      locked/",
+    "terminal   wrapped.exe   recordings/",
+    "bin/       settings      locked/",
     "",
     "locked/ : permission denied",
   ],
