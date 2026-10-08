@@ -10,12 +10,9 @@ export function PinnedNote({ note, index: i, onOpen }: {
 }) {
   return (
         <motion.div
-          drag
-          dragMomentum={false}
           initial={{ opacity: 0, y: 14, rotate: i % 2 ? -1.2 : 1.4 }}
           animate={{ opacity: 1, y: 0, rotate: i % 2 ? -1.2 : 1.4 }}
           transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-          whileDrag={{ rotate: 0, scale: 1.03, cursor: "grabbing", zIndex: 30 }}
           data-note={note.id}
           className="edge-lg group relative w-[272px] shrink-0 cursor-grab bg-card"
         >

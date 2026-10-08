@@ -26,7 +26,7 @@ function Reel({ spinning }: { spinning: boolean }) {
   )
 }
 
-/** The player that lives on the desktop. Draggable, like the Note Pad, and
+/** The player that lives on the desktop. The desk moves it like any card, and
     pressing it anywhere but the transport opens the full Music window. */
 export function TapeDeck({ onOpen }: { onOpen: () => void }) {
   const { track, index, tracks, playing, missing, currentTime, duration, toggle, next, prev } = useMusic()
@@ -35,12 +35,9 @@ export function TapeDeck({ onOpen }: { onOpen: () => void }) {
 
   return (
     <motion.div
-      drag
-      dragMomentum={false}
       initial={{ opacity: 0, y: 16, rotate: 0.8 }}
       animate={{ opacity: 1, y: 0, rotate: 0.8 }}
       transition={{ delay: 0.7, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      whileDrag={{ rotate: 0, scale: 1.02, cursor: "grabbing", zIndex: 30 }}
       /* A press that stays put is a click; one that travels was a drag. The
          transport buttons stop pointerdown, so `press` is null for those and
          they never open the window. */
